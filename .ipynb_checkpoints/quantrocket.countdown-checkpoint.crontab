@@ -1,0 +1,29 @@
+# Crontab syntax cheat sheet
+# .------------ minute (0 - 59)
+# |   .---------- hour (0 - 23)
+# |   |   .-------- day of month (1 - 31)
+# |   |   |   .------ month (1 - 12) OR jan,feb,mar,apr ...
+# |   |   |   |   .---- day of week (0 - 6) (Sunday=0 or 7)  OR sun,mon,tue,wed,thu,fri,sat
+# |   |   |   |   |
+# *   *   *   *   *   command to be executed
+
+# Set crontab timezone to Australia/Sydney
+0 1 * * * quantrocket countdown timezone 'Australia/Sydney'
+
+# Update ASX listings Monday-Friday mornings at 7:30 AM
+30 7 * * 1-5 quantrocket satellite exec 'python /codeload/data/scripts/asx-listings.py'
+
+# Update Master CSV file at 8:10 AM
+10 8 * * 1-5 quantrocket satellite exec 'python /codeload/data/scripts/master.py'
+
+# Append new listings to australia-stk at 8:20
+20 8 * * 1-5 quantrocket satellite exec 'python /codeload/data/scripts/update-universe.py'
+
+# Get daily data, save to australia-stk-1day at 7:30 PM
+30 19 * * 1-5 quantrocket history collect -s 2019-01-01 australia-stk-1day
+
+# Restart Ib Gateway
+# 0 1 * * * quantrocket launchpad stop --wait && quantrocket launchpad start
+
+# Collect shortable shares data
+30 1 * * * quantrocket fundamental collect-shortshares --countries australia && quantrocket fundamental collect-shortfees --countries australia
